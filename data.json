@@ -10,12 +10,22 @@
     {
       "id": 2,
       "name": "Gesellsc",
-      "queue": []
+      "queue": [
+        "rPhar,m:0:i:94,m:0:t:2,m:0:k:2621698,m:0:f:1\n",
+        "rPhar,m:0:i:74,m:0:t:3,m:0:k:2621696,m:0:f:1\n",
+        "rPhar,n:1\n",
+        "rPhar,c:f:1:1,c:t:1\n"
+      ]
     },
     {
       "id": 3,
       "name": "BillYum",
-      "queue": []
+      "queue": [
+        "rPhar,m:0:i:94,m:0:t:2,m:0:k:2621698,m:0:f:1\n",
+        "rPhar,m:0:i:74,m:0:t:3,m:0:k:2621696,m:0:f:1\n",
+        "rPhar,n:1\n",
+        "rPhar,c:f:1:1,c:t:1\n"
+      ]
     }
   ]
 }

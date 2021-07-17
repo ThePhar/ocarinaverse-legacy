@@ -15,10 +15,7 @@ server.on("connection", handleConnection);
 server.listen(50_000, () => console.log("Listening for TCP connections on port 50000"));
 
 // Our game for this event.
-const room = new Room("PharAsync", "4444")
-    .addPlayer("Phar")
-    .addPlayer("Gesellschaft") // ElsalvaDorian
-    .addPlayer("BillYum"); // AllDressedChips
+const room = new Room("PharAsync", "4444");
 
 save();
 
@@ -26,8 +23,8 @@ save();
  * Intercept any connections and validate them.
  * @param socket
  */
-async function handleConnection(socket: net.Socket): Promise<void> {
-    socket.on("data", async (data) => {
+function handleConnection(socket: net.Socket): void {
+    socket.on("data", (data) => {
         const event = Parser.Decode(`${data}`);
         const player = room.players.get(event.sender);
 
@@ -36,11 +33,11 @@ async function handleConnection(socket: net.Socket): Promise<void> {
 
         switch (event.type) {
             case MessageType.Config:
-                await validate(socket, event, room, player);
+                validate(socket, event, room, player);
                 break;
 
             case MessageType.PlayerNumber:
-                await connect(socket, room, player);
+                connect(socket, room, player);
                 break;
 
             case MessageType.Ping:
@@ -48,23 +45,27 @@ async function handleConnection(socket: net.Socket): Promise<void> {
                 socket.write(Parser.Encode({ type: MessageType.Ping, sender: room.id }));
                 break;
 
-            // Ignore these.
             case MessageType.Quit:
+                player.disconnect();
+                break;
+
+            // Ignore this type.
             case MessageType.PlayerStatus:
+            case MessageType.PlayerList:
                 break;
 
             default:
-                await forward(player, data, room);
+                forward(player, data, room);
         }
-    });
 
-    save();
+        save();
+    });
 }
 
 function save() {
     // For debug purposes, let's output the current room information.
-    console.clear();
-    console.log(`${room}`);
+    // console.clear();
+    // console.log(`${room}`);
 
     // Save to file.
     fs.writeFileSync(
@@ -101,7 +102,7 @@ function save() {
  * @param room
  * @param player
  */
-async function validate(socket: net.Socket, event: Message, room: Room, player?: Player): Promise<boolean> {
+function validate(socket: net.Socket, event: Message, room: Room, player?: Player): boolean {
     // If the player does not exist in our room, do not allow them to join.
     if (player === undefined) {
         socket.write(Parser.Encode({ type: MessageType.Error, sender: room.id }));
@@ -110,7 +111,7 @@ async function validate(socket: net.Socket, event: Message, room: Room, player?:
 
     // Destroy any active socket.
     if (player.active) {
-        player.socket?.destroy();
+        player.disconnect();
     }
 
     // Establish a relationship between this player and socket.
@@ -136,7 +137,7 @@ async function validate(socket: net.Socket, event: Message, room: Room, player?:
  * @param room
  * @param player
  */
-async function connect(socket: net.Socket, room: Room, player: Player): Promise<void> {
+function connect(socket: net.Socket, room: Room, player: Player): void {
     // Send this player their identifier.
     socket.write(
         Parser.Encode({
@@ -180,7 +181,7 @@ async function connect(socket: net.Socket, room: Room, player: Player): Promise<
             );
         }
 
-        // Tell the other player that we connected.
+        // Tell the other players that we connected.
         if (other.active) {
             other.socket?.write(`s${player.name},${player.name},Ready\n`);
         }
@@ -201,7 +202,7 @@ async function connect(socket: net.Socket, room: Room, player: Player): Promise<
  * @param event
  * @param room
  */
-async function forward(player: Player, event: Buffer, room: Room) {
+function forward(player: Player, event: Buffer, room: Room) {
     for (const other of room.players.values()) {
         // Do not send ourselves the message we JUST received.
         if (other.name === player.name) continue;

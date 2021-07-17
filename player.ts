@@ -24,7 +24,7 @@ export default class Player {
         // If we sent a new event that already exists, we need to push it to the front instead.
         const previousEvent = this.queue.findIndex((e) => e === event);
         if (previousEvent !== -1) {
-            this.queue = this.queue.splice(previousEvent, 1);
+            this.queue.splice(previousEvent, 1);
         }
 
         this.queue.push(event);
@@ -34,7 +34,7 @@ export default class Player {
      * Attempt to dequeue all events from this player while we are connected.
      */
     public dequeueAll() {
-        while (this.queue && this.active) {
+        while (this.queued && this.active) {
             this.socket?.write(this.queue.shift() as string);
         }
     }
@@ -42,6 +42,13 @@ export default class Player {
     public disconnect() {
         this.socket?.destroy();
         this.socket = undefined;
+
+        for (const other of this.room.players.values()) {
+            // Tell the other players that we disconnected.
+            if (other.active) {
+                other.socket?.write(`s${this.name},${this.name},Unready\n`);
+            }
+        }
     }
 
     public refreshTimeout() {

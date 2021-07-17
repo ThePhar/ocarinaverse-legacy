@@ -25,7 +25,7 @@ export default class Room {
                     player.id.toString().padStart(this.players.size.toString().length),
                 )}: "${chalk.whiteBright(player.name)}"
                     Queued: ${chalk.greenBright(player.queue.length)}
-                    Active: ${player.active ? chalk.greenBright("True") : chalk.redBright("False")}\n
+                    Active: ${player.active ? chalk.greenBright(`True`) : chalk.redBright("False")}\n
             `;
         }
 
@@ -38,6 +38,8 @@ export default class Room {
      * @param name
      */
     public addPlayer(name: string): Room {
+        name = name.slice(0, 8);
+
         this.players.set(name, new Player(this.players.size + 1, name, this));
         return this;
     }
