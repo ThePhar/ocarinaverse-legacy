@@ -26,7 +26,8 @@ save();
 function handleConnection(socket: net.Socket): void {
     socket.on("data", (data) => {
         const event = Parser.Decode(`${data}`);
-        const player = room.players.get(event.sender);
+        const name = event.sender.slice(0, 8);
+        const player = room.players.get(name);
 
         // Do not continue if this player does not exist.
         if (player === undefined) return;
