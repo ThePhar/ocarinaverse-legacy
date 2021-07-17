@@ -65,8 +65,8 @@ function handleConnection(socket: net.Socket): void {
 
 function save() {
     // For debug purposes, let's output the current room information.
-    // console.clear();
-    // console.log(`${room}`);
+    console.clear();
+    console.log(`${room}`);
 
     // Save to file.
     fs.writeFileSync(
