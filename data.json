@@ -1,0 +1,21 @@
+{
+  "id": "PharAsync",
+  "pass": "4444",
+  "players": [
+    {
+      "id": 1,
+      "name": "Phar",
+      "queue": []
+    },
+    {
+      "id": 2,
+      "name": "Gesellsc",
+      "queue": []
+    },
+    {
+      "id": 3,
+      "name": "BillYum",
+      "queue": []
+    }
+  ]
+}

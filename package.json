@@ -1,0 +1,22 @@
+{
+  "name": "ocarinaverse-legacy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build/index.js",
+  "scripts": {},
+  "author": "Zach Parks <zach@alliware.com>",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "@types/dedent": "^0.7.0",
+    "@types/node": "^16.3.3",
+    "prettier": "^2.3.2",
+    "rimraf": "^3.0.2",
+    "ts-node": "^10.1.0",
+    "typescript": "^4.3.5"
+  },
+  "dependencies": {
+    "chalk": "^4.1.1",
+    "dedent": "^0.7.0"
+  }
+}
