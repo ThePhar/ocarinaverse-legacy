@@ -19,6 +19,10 @@ const room = new Room("PharAsync", "4444");
 
 save();
 
+// DON'T LOOK ITS FINE
+process.on("uncaughtException", (e) => console.error(e));
+process.on("unhandledRejection", (e) => console.error(e));
+
 /**
  * Intercept any connections and validate them.
  * @param socket
